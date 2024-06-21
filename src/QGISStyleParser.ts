@@ -162,11 +162,13 @@ export class QGISStyleParser implements StyleParser {
    */
   qmlSymbolizerLayerPropsToObject(qmlSymbolizer: any) {
     const qmlMarkerProps: any = {};
-    qmlSymbolizer.prop.forEach((prop: QmlProp) => {
-      const key = prop.$.k;
-      const value = prop.$.v;
-      qmlMarkerProps[key] = value;
-    });
+    if (qmlSymbolizer.prop) {
+      qmlSymbolizer.prop.forEach((prop: QmlProp) => {
+        const key = prop.$.k;
+        const value = prop.$.v;
+        qmlMarkerProps[key] = value;
+      });
+    }
     return qmlMarkerProps;
   }
 
@@ -250,7 +252,7 @@ export class QGISStyleParser implements StyleParser {
         const filter: Filter | undefined = this.getFilterFromQmlRule(qmlRule);
         const scaleDenominator: ScaleDenominator | undefined = this.getScaleDenominatorFromRule(qmlRule);
         const name = qmlRule.$.label || qmlRule.$.filter;
-        let rule: Rule = <Rule> {
+        let rule: Rule = <Rule>{
           name
         };
         if (filter) {
@@ -270,7 +272,7 @@ export class QGISStyleParser implements StyleParser {
         const value = qmlCategory.$.value;
         const filter = ['==', attribute, value];
         const name = `${attribute} = ${value}`;
-        let rule: Rule = <Rule> {
+        let rule: Rule = <Rule>{
           name,
           filter
         };
@@ -289,8 +291,8 @@ export class QGISStyleParser implements StyleParser {
           '&&',
           ['>=', attribute, lower],
           ['<=', attribute, upper]
-        ]  ;
-        let rule: Rule = <Rule> {
+        ];
+        let rule: Rule = <Rule>{
           name,
           filter
         };
@@ -304,7 +306,7 @@ export class QGISStyleParser implements StyleParser {
       const labels = labelMap[Object.keys(labelMap)[0]] || [];
       const rule: Rule = {
         name: 'QGIS Simple Symbol',
-        symbolizers:  [
+        symbolizers: [
           ...symbolizers,
           ...labels
         ]
@@ -350,7 +352,7 @@ export class QGISStyleParser implements StyleParser {
   getScaleDenominatorFromRule(qmlRule: QmlRule): ScaleDenominator | undefined {
     const maxScaleDenominator = _get(qmlRule, '$.scalemaxdenom');
     const minScaleDenominator = _get(qmlRule, '$.scalemindenom');
-    let scaleDenominator: ScaleDenominator = <ScaleDenominator> {};
+    let scaleDenominator: ScaleDenominator = <ScaleDenominator>{};
     if (minScaleDenominator) {
       scaleDenominator.min = Number(minScaleDenominator);
     }
@@ -1000,7 +1002,7 @@ export class QGISStyleParser implements StyleParser {
         if (textSymbolizer.font) {
           textStyleAttributes.fontFamily = textSymbolizer.font[0];
         }
-        if (textSymbolizer.label && !isGeoStylerFunction(textSymbolizer.label )) {
+        if (textSymbolizer.label && !isGeoStylerFunction(textSymbolizer.label)) {
           textStyleAttributes.fieldName = textSymbolizer.label.replace('{{', '').replace('}}', '');
         }
         if (

@@ -10,6 +10,7 @@ import point_label from '../data/styles/point_label';
 import point_ranges from '../data/styles/point_ranges';
 import point_external_graphic from '../data/styles/point_external_graphic';
 import polygon_simple from '../data/styles/polygon_simple';
+import polygon_simple_new from '../data/styles/polygon_simple_new';
 import polygon_simple_nostyle from '../data/styles/polygon_simple_nostyle';
 import no_symbolizer from '../data/styles/no_symbolizer';
 import text_text_buffer from '../data/styles/text_text_buffer';
@@ -77,7 +78,14 @@ describe('QMLStyleParser implements StyleParser', () => {
         const qml = fs.readFileSync('./data/qmls/polygon_simple.qml', 'utf8');
         const { output: geoStylerStyle } = await styleParser.readStyle(qml);
         expect(geoStylerStyle).toBeDefined();
-        expect(geoStylerStyle).toEqual(polygon_simple);
+        expect(geoStylerStyle).toEqual(polygon_simple_new);
+      });
+      it('can read a simple QML FillSymbol from version 3.34', async () => {
+        expect.assertions(2);
+        const qml = fs.readFileSync('./data/qmls/polygon_simple_new.qml', 'utf8');
+        const { output: geoStylerStyle } = await styleParser.readStyle(qml);
+        expect(geoStylerStyle).toBeDefined();
+        expect(geoStylerStyle).toEqual(polygon_simple_new);
       });
     });
     describe('FillSymbolizer with no style', () => {
